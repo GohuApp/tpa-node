@@ -1,0 +1,233 @@
+<ng-container *ngIf="signature; else loading">
+  <!-- 
+    //Aqui puedo poner la cabecera
+  -->
+  <div id="contenido">
+    <div id="cabecera">
+      <img src="assets/logo_certificado.svg" width="175">
+    </div>
+
+
+    <ng-container *ngIf="!signature.isSigned; else showReport">
+      <ng-container *ngIf="step == 0">
+        <form [formGroup]="validationFormGroup">
+          <p>
+            <strong>Bienvenido {{ signature.commonName }}</strong><br> Ha entrado en la AUTORIDAD DE
+            TERCERA PARTE GOHU para la firma de documentos. Compruebe que los siguientes datos son correctos:
+          </p>
+          <table>
+            <tr>
+              <td class="propiedad">NOMBRE: </td>
+              <td><strong>{{ signature.commonName }}</strong></td>
+            </tr>
+            <tr>
+              <td class="propiedad">DNI: </td>
+              <td><strong>{{ signature.serialNumber }}</strong></td>
+            </tr>
+            <tr>
+              <td class="propiedad">MÓVIL: </td>
+              <td><strong>{{ signature.telephoneNumber }}</strong></td>
+            </tr>
+            <tr *ngIf="signature.organizationName">
+              <td class="propiedad">SOCIEDAD: </td>
+              <td><strong>{{ signature.organizationName }}</strong></td>
+            </tr>
+            <tr *ngIf="signature.organizationName">
+              <td class="propiedad">CIF: </td>
+              <td><strong>{{ signature.organizationId }}</strong></td>
+            </tr>
+            <tr *ngIf="signature.organizationalUnitName">
+              <td class="propiedad">DEPARTAMENTO: </td>
+              <td><strong>{{ signature.organizationalUnitName }}</strong></td>
+            </tr>
+          </table>
+          <p>
+            PARA CONFIRMAR SU IDENTIDAD LE ENVIAREMOS UN SMS CON UN CÓDIGO DE 5 DÍGITOS AL TELÉFONO
+            <strong>{{ signature.telephoneNumber }}</strong>
+          </p>
+          <div class="buttons">
+            <ng-container *ngIf="!pinRequested">
+              <button #buttonSendPin mat-raised-button (click)="sendPin()">
+                Es correcto, ENVIAR PIN
+              </button>
+            </ng-container>
+            <ng-container *ngIf="pinRequested">
+              <div>
+                <mat-form-field appearance="outline">
+                  <mat-label>PIN</mat-label>
+                  <input matInput formControlName="pin" />
+                </mat-form-field>
+              </div>
+              <div>
+                <button #buttonResendPin mat-raised-button (click)="sendPin()">
+                  <mat-icon>update</mat-icon>
+                </button>
+
+                <button mat-raised-button #buttonGenerateCert (click)="generateCertificate()" type="submit">
+                  ENVIAR
+                </button>
+              </div>
+            </ng-container>
+          </div>
+        </form>
+      </ng-container>
+      <ng-container *ngIf="step == 1">
+        <p>
+          <strong>IMPORTANTE</strong><br/>
+          LEA ATENTAMENTE LOS DOCUMENTOS Y SI ESTÁ DE ACUERDO:
+        </p>
+        <div class="ol">
+          <div>1. <strong>FIRME EN EL CUADRO</strong> QUE HAY AL FINAL DE LOS DOCUMENTOS</div>
+          <div>2. ACTIVE LA CASILLA <strong>ACEPTAR</strong>.</div>
+          <div>3. PULSE SOBRE EL BOTÓN <strong>FIRMAR</strong>.</div>
+        </div>
+        <hr />
+        <ng-container *ngTemplateOutlet="showDocuments"></ng-container>
+        <form [formGroup]="signatureFormGroup">
+          <div class="buttons">
+            <!--
+            Firme en el siguiente cuadro:
+            <br />
+          -->
+            <canvas class="canvas" #sPad width="300" height="300"></canvas>
+          </div>
+          <div class="buttons">
+            <mat-checkbox formControlName="aceptar">ACEPTAR</mat-checkbox>
+          </div>
+          <div class="buttons">
+            <button mat-raised-button #buttonSign (click)="sign()">
+              FIRMAR
+            </button>
+          </div>
+        </form>
+      </ng-container>
+      <ng-container *ngIf="step == 2">
+        <h3>Se han firmado los documentos</h3>
+        <ng-container *ngTemplateOutlet="showReport"></ng-container>
+      </ng-container>
+    </ng-container>
+  </div>
+  <!--
+  <div id="pie">
+    <div class="row mtn-40">
+      <div class="col-lg-4 order-4 order-lg-0">
+        <div class="widget-item">
+          <div class="about-widget">
+            <a href="index.html"><img src="assets/logo-dark.svg" alt="Logo"></a>
+            <p>
+              Descubre el potencial de un nuevo canal
+              de comunicación.
+            </p>
+
+            <div class="copyright-txt">
+              <p>
+                © 2020 Todos los derechos
+                reservados. GOHU® es una marca
+                registrada de POSTAll DIGITAL
+                MAILBOXES S.L.U.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 col-lg-2 ml-auto">
+        <div class="widget-item">
+          <h4 class="widget-title">Información</h4>
+          <div class="widget-body">
+            <ul class="widget-list">
+              <li>
+                <a href="https://www.gohu.es/#privacidad">Aviso Legal y Condiciones de
+                  Uso</a>
+              </li>
+              <li>
+                <a href="https://www.gohu.es/#privacidad">Política de privacidad</a>
+              </li>
+              <li>
+                <a href="https://www.gohu.es/#privacidad">Cookies</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 col-lg-2 ml-auto">
+        <div class="widget-item">
+          <h4 class="widget-title">Redes Sociales</h4>
+          <div class="widget-body">
+            <ul class="widget-list">
+              <li>
+                <a href="https://www.linkedin.com/in/postall/">línkedin</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 col-lg-3">
+        <div class="widget-item">
+          <h4 class="widget-title">Contacto</h4>
+          <div class="widget-body">
+            <address>
+              Doctor Sixto Seco, Portal 6-8 bajo B.
+              15401 Ferrol - A Coruña <br>
+              https://gohu.es <br>
+              Tel.: 672 451 856 | 665 919 781 <br>
+              <a href="mailto:hola@gohu.es">hola@gohu.es</a>
+            </address>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  -->
+</ng-container>
+
+<ng-template #showDocuments>
+  <div [innerHTML]="purpose()"></div>
+  <div [innerHTML]="basis()"></div>
+  <div *ngFor="let a of signature.attachments">
+    <object [attr.data]="a.sanitizeUrl" type="application/pdf" height="300">
+      <embed [attr.src]="a.sanitizeUrl" type="application/pdf" height="300" />
+    </object>
+  </div>
+</ng-template>
+
+<ng-template #showReport>
+  <!--
+  <ng-container *ngIf="handwrittenVideo">
+    <video class="canvas" id="video" autoplay [muted]="true">
+      <source type="video/webm" [src]="handwrittenVideo" />
+    </video>
+  </ng-container>
+  <ng-container *ngIf="!handwrittenVideo">
+    <img class="canvas" [src]="handwrittenImage" />
+  </ng-container>
+-->
+  <object [attr.data]="reportUrlSanitize" type="application/pdf" width="100%" height="600">
+    <embed [attr.src]="reportUrlSanitize" type="application/pdf" width="100%" height="600" />
+  </object>
+  <button mat-raised-button (click)="descargarEvidencia()">
+    DESCARGAR EVIDENCIA ELECTRÓNICA
+  </button>
+  <button mat-raised-button (click)="descargarXml()">
+    DESCARGAR XML FIRMA
+  </button>
+</ng-template>
+
+<ng-template #loading>
+  <div class="centrado">
+    <img src="assets/logo_certificado.svg" width="275">
+    <p>
+      CARGANDO FICHEROS DE FIRMA<br>
+      {{id}}
+    </p>
+
+    <div class="cssload-squircle">
+      <div class="cssload-outer-squircle"></div>
+      <div class="cssload-inner-squircle"></div>
+    </div>
+
+
+  </div>
+</ng-template>

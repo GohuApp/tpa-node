@@ -1,0 +1,10 @@
+
+chunk {main} main.js, main.js.map (main) 122 kB [initial] [rendered]
+chunk {polyfills} polyfills.js, polyfills.js.map (polyfills) 142 kB [initial] [rendered]
+chunk {runtime} runtime.js, runtime.js.map (runtime) 6.15 kB [entry] [rendered]
+chunk {scripts} scripts.js, scripts.js.map (scripts) 1.75 MB [entry] [rendered]
+chunk {styles} styles.js, styles.js.map (styles) 308 kB [initial] [rendered]
+chunk {vendor} vendor.js, vendor.js.map (vendor) 7.33 MB [initial] [rendered]
+Date: 2020-07-21T16:58:40.946Z - Hash: 1832c595805166ae83dd - Time: 16038ms
+** Angular Live Development Server is listening on localhost:4200, open your browser on http://localhost:4200/ **
+: Compiled successfully.
