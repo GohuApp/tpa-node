@@ -17,7 +17,7 @@ embed {
 #contenido {
   text-align: left;
   color: black;
-  padding:20px;
+  padding: 20px;
   max-width: 520px;
   margin: 0 auto;
 }
@@ -30,21 +30,30 @@ table {
   text-align: center;
   margin-bottom: 30px;
 }
-.propiedad{
+.propiedad {
   text-align: right;
 }
-.buttons{
+.buttons {
   text-align: center;
 }
-.ol{
+.ol {
   margin: 0 auto;
   margin-bottom: 30px;
   max-width: 500px;
   text-align: left;
 }
-#pie{
-    margin-top:80px;
+#pie {
+  margin-top: 80px;
 }
-strong{
-    color:black;
+strong {
+  color: black;
+}
+.button-60 {
+  width: 60%;
+}
+.button-40 {
+  width: 40%;
+}
+.button-100 {
+  width: 100%;
 }

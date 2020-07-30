@@ -172,8 +172,6 @@ export class SignatureComponent implements OnInit, OnDestroy {
             }
           }
 
-          console.log(stream);
-
           this.recordedBlobs = [];
           // this.mediaType = 'video/webm';
           /*const firefox = ('netscape' in window) && / rv:/.test(navigator.userAgent);
@@ -202,7 +200,6 @@ export class SignatureComponent implements OnInit, OnDestroy {
 
           }
 
-          console.log(this.mediaType);
           //this.mediaType = this.mediaRecorder.mimeType;
 
           this.mediaRecorder.ondataavailable = (event) => {
@@ -310,6 +307,7 @@ export class SignatureComponent implements OnInit, OnDestroy {
           this.step = 2;
           this.handwrittenImage = this.sanitizer.bypassSecurityTrustUrl(this.signature.handwrittenImage);
 
+          /*
           if (this.signature.handwrittenVideo) {
             this.handwrittenVideo = this.sanitizer.bypassSecurityTrustUrl(this.signature.handwrittenVideo);
           }
@@ -321,7 +319,7 @@ export class SignatureComponent implements OnInit, OnDestroy {
               }
             );
           }, 5000); /// solo se puede enviar un SMS cada 2 minutos
-
+          */
         } else {
           // this.step = 1
         }
@@ -458,6 +456,10 @@ export class SignatureComponent implements OnInit, OnDestroy {
       }
     );
 
+  }
+
+  cerrar() {
+    window.close();
   }
 
   purpose() {
@@ -676,7 +678,6 @@ export class SignatureComponent implements OnInit, OnDestroy {
           this.importKeys();
         };*/
 
-        console.log(this.mediaType);
         const blob = new Blob(this.recordedBlobs, { type: 'video/webm' });//,
         reader.readAsDataURL(blob); // converts the blob to base64 and calls onload
       };
@@ -1060,7 +1061,7 @@ export class SignatureComponent implements OnInit, OnDestroy {
           this.signedXml.properties.UnsignedProperties.UnsignedSignatureProperties.items[pos].OCSPValues.items[0] = new XAdES.xml.EncapsulatedOCSPValue();
           this.signedXml.properties.UnsignedProperties.UnsignedSignatureProperties.items[pos].OCSPValues.items[0].Value = ocspResponse;
 
-          console.log(this.signedXml.toString());
+    
           this.service.sign(this.id, this.signedXml.toString()).subscribe(
             res => {
               swal.default.close();
@@ -1085,7 +1086,7 @@ export class SignatureComponent implements OnInit, OnDestroy {
     window.location.href = this.reportUrl;
   }
 
-  descargarXml(){
+  descargarXml() {
     window.location.href = this.signatureUrl;
   }
 
@@ -1137,7 +1138,7 @@ export class SignatureComponent implements OnInit, OnDestroy {
     for (let i = 0; i < byteStr.length; i++) {
       writer[i] = byteStr.charCodeAt(i);
     }
-    console.log(arrBuff);
+
     return arrBuff;
   }
 

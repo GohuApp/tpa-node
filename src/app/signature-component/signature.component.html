@@ -73,7 +73,7 @@
       </ng-container>
       <ng-container *ngIf="step == 1">
         <p>
-          <strong>IMPORTANTE</strong><br/>
+          <strong>IMPORTANTE</strong><br />
           LEA ATENTAMENTE LOS DOCUMENTOS Y SI ESTÁ DE ACUERDO:
         </p>
         <div class="ol">
@@ -207,12 +207,19 @@
   <object [attr.data]="reportUrlSanitize" type="application/pdf" width="100%" height="600">
     <embed [attr.src]="reportUrlSanitize" type="application/pdf" width="100%" height="600" />
   </object>
-  <button mat-raised-button (click)="descargarEvidencia()">
-    DESCARGAR EVIDENCIA ELECTRÓNICA
-  </button>
-  <button mat-raised-button (click)="descargarXml()">
-    DESCARGAR XML FIRMA
-  </button>
+  <div>
+    <button class="button-60" mat-raised-button (click)="descargarEvidencia()">
+      DESCARGAR EVIDENCIA ELECTRÓNICA
+    </button>
+    <button class="button-40" mat-raised-button (click)="descargarXml()">
+      DESCARGAR XML FIRMA
+    </button>
+  </div>
+  <div>
+    <button  class="button-100" mat-raised-button (click)="cerrar()">
+      CERRAR
+    </button>
+  </div>
 </ng-template>
 
 <ng-template #loading>
