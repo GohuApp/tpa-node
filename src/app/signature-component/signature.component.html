@@ -187,9 +187,17 @@
   <div [innerHTML]="purpose()"></div>
   <div [innerHTML]="basis()"></div>
   <div *ngFor="let a of signature.attachments">
-    <object [attr.data]="a.sanitizeUrl" type="application/pdf" height="300">
-      <embed [attr.src]="a.sanitizeUrl" type="application/pdf" height="300" />
+    <!--<ng2-pdfjs-viewer  [pdfSrc]="a.url"></ng2-pdfjs-viewer>-->
+
+    <iframe *ngIf="!isFirefox && a.sanitizePdfViewer" [src]="a.sanitizePdfViewer" height="300" width="100%"></iframe>
+
+    <!--<ngx-extended-pdf-viewer [src]="a.arrayBuffer" useBrowserLocale="true" height="300" [textLayer]="true"></ngx-extended-pdf-viewer>-->
+
+    <object *ngIf="isFirefox && a.sanitizeResource" [attr.data]="a.sanitizeResource" type="application/pdf"
+      height="300">
+      <embed [attr.src]="a.sanitizeResource" type="application/pdf" height="300" />
     </object>
+
   </div>
 </ng-template>
 
@@ -204,7 +212,9 @@
     <img class="canvas" [src]="handwrittenImage" />
   </ng-container>
 -->
-  <object [attr.data]="reportUrlSanitize" type="application/pdf" width="100%" height="600">
+
+  <iframe *ngIf="!isFirefox" [src]="reportSanitizePdfViewer" height="300" width="100%"></iframe>
+  <object *ngIf="isFirefox" [attr.data]="reportUrlSanitize" type="application/pdf" width="100%" height="600">
     <embed [attr.src]="reportUrlSanitize" type="application/pdf" width="100%" height="600" />
   </object>
   <div>
@@ -216,7 +226,7 @@
     </button>
   </div>
   <div>
-    <button  class="button-100" mat-raised-button (click)="cerrar()">
+    <button class="button-100" mat-raised-button (click)="cerrar()">
       CERRAR
     </button>
   </div>

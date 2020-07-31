@@ -49,6 +49,7 @@ export class SignatureComponent implements OnInit, OnDestroy {
   public numAttachmentLoaded = 0;
 
   public step = 0;
+  public isFirefox = false;
 
   private pubKey;
   private privKey;
@@ -64,6 +65,7 @@ export class SignatureComponent implements OnInit, OnDestroy {
   public handwrittenVideo;
   public reportUrl;
   public reportUrlSanitize;
+  public reportSanitizePdfViewer;
   public signatureUrl;
 
   private issuer = `-----BEGIN CERTIFICATE-----
@@ -281,6 +283,8 @@ export class SignatureComponent implements OnInit, OnDestroy {
         aceptar: [false, Validators.requiredTrue]
       }
     );
+
+    this.isFirefox = ('netscape' in window) && / rv:/.test(navigator.userAgent);
   }
 
   ngOnInit(): void {
@@ -293,7 +297,9 @@ export class SignatureComponent implements OnInit, OnDestroy {
       switchMap(params => {
         this.id = params.get('id');
         this.reportUrl = environment.endPoint + '/signatures/' + this.id + '/report/firma';
+
         this.reportUrlSanitize = this.sanitizer.bypassSecurityTrustResourceUrl(this.reportUrl);
+        this.reportSanitizePdfViewer = this.sanitizer.bypassSecurityTrustResourceUrl('assets/pdfjs/web/viewer.html?file=' + encodeURIComponent(this.reportUrl))
         this.signatureUrl = environment.endPoint + '/signatures/' + this.id + '/signature';
         return this.service.getOne(this.id);
       })
@@ -379,13 +385,20 @@ export class SignatureComponent implements OnInit, OnDestroy {
       this.service.getAttachment(this.id, this.signature.attachments[this.numAttachmentLoaded].id).subscribe(
         res => {
           this.signature.attachments[this.numAttachmentLoaded].blob = res;
-          this.signature.attachments[this.numAttachmentLoaded].sanitizeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(res));
+          this.signature.attachments[this.numAttachmentLoaded].sanitizeResource = this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(res));
+          this.signature.attachments[this.numAttachmentLoaded].sanitizeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.signature.attachments[this.numAttachmentLoaded].url);
+          this.signature.attachments[this.numAttachmentLoaded].sanitizePdfViewer = this.sanitizer.bypassSecurityTrustResourceUrl('assets/pdfjs/web/viewer.html?file=' + encodeURIComponent(this.signature.attachments[this.numAttachmentLoaded].url))
+
+          /// console.log('http://localhost:4200/assets/pdfjs/web/viewer.html?file=' + encodeURIComponent(this.signature.attachments[this.numAttachmentLoaded].url));
 
           const reader = new FileReader();
           //chrome
           reader.onload = () => {
             const buffer = reader.result;
-            this.signature.attachments[this.numAttachmentLoaded].arrayBuffer = buffer;
+            // this.signature.attachments[this.numAttachmentLoaded].arrayBuffer = buffer;
+            this.signature.attachments[this.numAttachmentLoaded].base64 = Buffer.from(buffer).toString('base64');
+
+            //console.log(this.signature.attachments[this.numAttachmentLoaded]);
             this.numAttachmentLoaded++;
             this.loadAttachments();
           };
@@ -749,7 +762,7 @@ export class SignatureComponent implements OnInit, OnDestroy {
       xml += '<Attachments>';// + '\n'
       for (const a of this.signature.attachments) {
         xml += '<Attachment encoding="http://www.w3.org/2000/09/xmldsig#base64" MimeType="application/pdf">';
-        xml += Buffer.from(a.arrayBuffer).toString('base64');
+        xml += a.base64;
         xml += '</Attachment>';//+ '\n'
       }
       xml += '</Attachments>';// + '\n'
@@ -1061,7 +1074,7 @@ export class SignatureComponent implements OnInit, OnDestroy {
           this.signedXml.properties.UnsignedProperties.UnsignedSignatureProperties.items[pos].OCSPValues.items[0] = new XAdES.xml.EncapsulatedOCSPValue();
           this.signedXml.properties.UnsignedProperties.UnsignedSignatureProperties.items[pos].OCSPValues.items[0].Value = ocspResponse;
 
-    
+
           this.service.sign(this.id, this.signedXml.toString()).subscribe(
             res => {
               swal.default.close();

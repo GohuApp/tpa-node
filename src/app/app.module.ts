@@ -17,7 +17,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-
+import { PdfJsViewerModule } from 'ng2-pdfjs-viewer'; 
 @NgModule({
   declarations: [
     AppComponent,
@@ -37,7 +37,8 @@ import { MatInputModule } from '@angular/material/input';
     MatButtonModule,
     HttpClientModule,
     ReactiveFormsModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    PdfJsViewerModule
   ],
   providers: [
     {

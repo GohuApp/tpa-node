@@ -46,6 +46,7 @@ export class SignatureService {
 
                     for (let i = 0; i < res['attachments'].length; i++) {
                         res['attachments'][i] = Object.assign(new Attachment(), res['attachments'][i]);
+                        res['attachments'][i].url = environment.endPoint + '/signatures/' + id + '/attachment/' + res['attachments'][i].id;
                     }
 
                     return Object.assign(new Signature(), res);
