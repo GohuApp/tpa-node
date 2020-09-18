@@ -26,7 +26,7 @@
     "crypto-browserify": "^3.12.0",
     "ng2-pdfjs-viewer": "^5.0.7",
     "ngx-extended-pdf-viewer": "^4.0.0",
-    "node-forge": "^0.7.6",
+    "node-forge": "^0.10.0",
     "rxjs": "~6.5.5",
     "signature_pad": "^3.0.0-beta.3",
     "sweetalert2": "^9.15.2",
